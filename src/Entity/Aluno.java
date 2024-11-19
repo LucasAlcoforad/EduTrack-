@@ -1,7 +1,7 @@
 package Entity;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class Aluno {
@@ -10,7 +10,7 @@ public class Aluno {
 
     public String nome;
 
-    public LocalDate dataNascimento;
+    public Date dataNascimento;
 
     public List<Nota> notas;
 
@@ -38,18 +38,18 @@ public class Aluno {
         this.notas = notas;
     }
 
-    public LocalDate getDataNascimento() {
+    public Date getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(LocalDate dataNascimento) {
+    public void setDataNascimento(Date dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
     public Aluno() {
     }
 
-    public Aluno(Integer idAluno, String nome, LocalDate dataNascimento, List<Nota> notas) {
+    public Aluno(Integer idAluno, String nome, Date dataNascimento, List<Nota> notas) {
         this.idAluno = idAluno;
         this.nome = nome;
         this.dataNascimento = dataNascimento;

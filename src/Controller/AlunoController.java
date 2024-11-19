@@ -8,15 +8,17 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class AlunoController {
-    public int cadastrarAluno(AlunoDto createAlunoDto) throws SQLException {
+    public int createAluno(AlunoDto createAlunoDto) throws SQLException {
         return new AlunoService().createAluno(createAlunoDto);
     }
-    public Aluno getAlunoById(int id) throws ClassNotFoundException {
-        var aluno = new AlunoService().getAlunoById(id);
-        if (aluno == null){
-            throw new IllegalArgumentException("Aluno nao cadastrado");
-        }
-        return aluno;
+    public Aluno getAlunoById(int id) {
+        return new AlunoService().getAlunoById(id);
     }
-    public void updateAluno()
+    public boolean updateAluno(AlunoDto dto,
+                            Integer id){
+        return new AlunoService().updateAluno(dto, id);
+    }
+    public boolean deleteAluno(int id){
+        return new AlunoService().deleteAluno(id);
+    }
 }

@@ -2,6 +2,7 @@ package service;
 
 import Controller.dto.AlunoDto;
 import Entity.Aluno;
+import Exceçoes.UserNaoEncontradoException;
 import Repository.AlunoRepository;
 
 import java.sql.SQLException;
@@ -25,6 +26,26 @@ public class AlunoService {
     }
 
     public Aluno getAlunoById(int id){
-        return AlunoRepository.getAluno(id);
+
+        Aluno aluno = AlunoRepository.getAluno(id);
+        if (aluno == null){
+            throw new UserNaoEncontradoException("Aluno com id " + id + " não encontrado.");
+        }
+        return aluno;
+    }
+
+    public boolean updateAluno(AlunoDto dto,
+                               int id){
+        Aluno aluno = AlunoRepository.getAluno(id);
+        if (aluno == null){
+            throw new UserNaoEncontradoException("Aluno com id " + id + " não encontrado.");
+        }
+        aluno.setNome(dto.nome());
+        aluno.setDataNascimento(dto.dataDeNascimento());
+        return AlunoRepository.updateAluno(aluno);
+    }
+
+    public boolean deleteAluno(int id){
+        return AlunoRepository.deleteAluno(id);
     }
 }

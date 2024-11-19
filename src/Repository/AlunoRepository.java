@@ -1,8 +1,9 @@
 package Repository;
 
 import Config.DBConfig;
-import Controller.dto.CreateAlunoDto;
+import Controller.dto.AlunoDto;
 import Entity.Aluno;
+import Exceçoes.UserNaoEncontradoException;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -14,39 +15,55 @@ import java.util.Optional;
 public class AlunoRepository {
     public static int createAluno(Aluno aluno) throws SQLException {
         String sql = "INSERT INTO aluno (id_aluno, nome, data_nascimento) VALUES (?,?,?)";
-        PreparedStatement ps = null;
-        try {
-            ps = DBConfig.getConnection().prepareStatement(sql);
-            ps.setString(1,String.valueOf(aluno.getIdAluno()));
+        try (PreparedStatement ps = DBConfig.getConnection().prepareStatement(sql)){
+            ps.setInt(1,aluno.getIdAluno());
             ps.setString(2,aluno.getNome());
-            ps.setString(3,aluno.getDataNascimento().toString());
+            ps.setDate(3,aluno.getDataNascimento());
             ps.execute();
-            ps.close();
-        }catch (SQLException e){
-            e.printStackTrace();
+            return aluno.getIdAluno();
+        } catch (SQLException e){
+            throw new RuntimeException(e);
         }
-        return aluno.getIdAluno();
     }
 
     public static Aluno getAluno(int id){
-        String sql = "SELECT * FROM aluno WHERE id_aluno = ?";
-        PreparedStatement ps = null;
-        Aluno aluno = null;
-        try {
-            ps = DBConfig.getConnection().prepareStatement(sql);
-            ps.setInt(1,id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()){
-                LocalDate localDate = LocalDate.parse(rs.getString("data_nascimento"));
-                aluno = new Aluno(rs.getInt("id_aluno"),
-                        rs.getString("nome"),
-                        localDate,
-                        null);
+        String sql = "SELECT * FROM aluno WHERE id_aluno = ?"; // armazena o nosso comando
+        Aluno aluno = null; // inicializa o aluno
+        try (PreparedStatement ps = DBConfig.getConnection().prepareStatement(sql)){
+            ps.setInt(1,id); //
+            try (ResultSet resultSet = ps.executeQuery()){
+                if (resultSet.next()){
+                    aluno = new Aluno(resultSet.getInt("id_aluno"),
+                            resultSet.getString("nome"),
+                            resultSet.getDate("data_nascimento"),
+                            null);
+                }
+                return aluno;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return aluno;
     }
 
+    public static boolean updateAluno(Aluno aluno){
+        String sql = "UPDATE aluno SET nome = ?, data_nascimento = ? WHERE id_aluno = ?";
+        try (PreparedStatement statement = DBConfig.getConnection().prepareStatement(sql)){
+            statement.setString(1,aluno.getNome());
+            statement.setDate(2, aluno.getDataNascimento());
+            statement.setInt(3, aluno.getIdAluno());
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean deleteAluno(int id) {
+        String sql = "DELETE FROM aluno WHERE id_aluno = ?";
+        try(PreparedStatement statement = DBConfig.getConnection().prepareStatement(sql)){
+            statement.setInt(1,id);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

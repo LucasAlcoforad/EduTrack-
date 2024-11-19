@@ -4,11 +4,21 @@ import java.util.Date;
 
 public class Nota {
 
-    public Aluno aluno;
+    public int idAluno;
 
-    public Disciplina disciplina;
+    public int idDisciplina;
 
     public float nota;
 
     public Date data;
+
+    public Nota() {
+    }
+
+    public Nota(int idAluno, int idDisciplina, float nota, Date data) {
+        this.idAluno = idAluno;
+        this.idDisciplina = idDisciplina;
+        this.nota = nota;
+        this.data = data;
+    }
 }

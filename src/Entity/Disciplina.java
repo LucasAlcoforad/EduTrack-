@@ -10,7 +10,7 @@ public class Disciplina {
 
     public List<Nota> notas;
 
-    public List<Professor> professors;
+    public List<Professor> professores;
 
     public Disciplina() {
     }
