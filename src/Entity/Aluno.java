@@ -1,68 +1,40 @@
 package Entity;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.sql.Date;
 import java.util.List;
 
-public class Aluno {
+public class Aluno extends User{
 
-    public Integer idAluno;
+    public List<String> disciplinas;
 
-    public String nome;
-
-    public Date dataNascimento;
-
-    public List<Nota> notas;
-
-    public int getIdAluno() {
-        return idAluno;
-    }
-
-    public void setIdAluno(int idAluno) {
-        this.idAluno = idAluno;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public List<Nota> getNotas() {
-        return notas;
-    }
-
-    public void setNotas(List<Nota> notas) {
-        this.notas = notas;
-    }
-
-    public Date getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(Date dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
 
     public Aluno() {
     }
 
-    public Aluno(Integer idAluno, String nome, Date dataNascimento, List<Nota> notas) {
-        this.idAluno = idAluno;
-        this.nome = nome;
-        this.dataNascimento = dataNascimento;
-        this.notas = notas;
+    public Aluno(int id, String password, String nome, LocalDate dataNascimento, Instant creationTimestamp, Instant updateTimestamp, List<String> disciplinas) {
+        super(id, password, nome, dataNascimento, creationTimestamp, updateTimestamp);
+        this.disciplinas = disciplinas;
+    }
+
+    public List<String> getDisciplinas() {
+        return disciplinas;
+    }
+
+    public void setDisciplinas(List<String> disciplinas) {
+        this.disciplinas = disciplinas;
     }
 
     @Override
     public String toString() {
         return "Aluno{" +
-                "idAluno=" + idAluno +
+                "id=" + id +
+                ", password='" + password + '\'' +
                 ", nome='" + nome + '\'' +
                 ", dataNascimento=" + dataNascimento +
-                ", notas=" + notas +
+                ", disciplinas=" + disciplinas +
+                ", creationTimestamp=" + creationTimestamp +
+                ", updateTimestamp=" + updateTimestamp +
                 '}';
     }
 }

@@ -1,24 +1,68 @@
 package Entity;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Nota {
+    public Integer id;
 
-    public int idAluno;
+    public Integer idDisciplina;
 
-    public int idDisciplina;
+    public Integer idAluno;
 
-    public float nota;
+    public double nota;
 
-    public Date data;
+    public LocalDate data;
 
     public Nota() {
     }
 
-    public Nota(int idAluno, int idDisciplina, float nota, Date data) {
-        this.idAluno = idAluno;
+    public Nota(Integer id, Integer idDisciplina, Integer idAluno, double nota, LocalDate data) {
+        this.id = id;
         this.idDisciplina = idDisciplina;
+        this.idAluno = idAluno;
         this.nota = nota;
+        this.data = data;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getIdDisciplina() {
+        return idDisciplina;
+    }
+
+    public void setIdDisciplina(Integer idDisciplina) {
+        this.idDisciplina = idDisciplina;
+    }
+
+    public Integer getIdAluno() {
+        return idAluno;
+    }
+
+    public void setIdAluno(Integer idAluno) {
+        this.idAluno = idAluno;
+    }
+
+    public double getNota() {
+        return nota;
+    }
+
+    public void setNota(double nota) {
+        this.nota = nota;
+    }
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
         this.data = data;
     }
 }

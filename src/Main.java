@@ -1,19 +1,24 @@
 import Controller.AlunoController;
-import Controller.dto.AlunoDto;
-import Entity.Aluno;
+import Controller.DisciplinaController;
+import Controller.NotaController;
+import Controller.dto.NotaDto;
 
-import java.sql.Date;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.NoSuchElementException;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        //78031
-        AlunoController controller = new AlunoController();
-        AlunoDto alunoDto = new AlunoDto("aquino",new Date(2002 - 8 - 22));
-        System.out.println(controller.deleteAluno(78031));
-        //Aluno aluno = controller.getAlunoById()
+        //13122
+
+        AlunoController alunoController = new AlunoController();
+        DisciplinaController disciplinaController = new DisciplinaController();
+        NotaController notaController = new NotaController();
+        disciplinaController.createDisciplina("DB");
+        /*AlunoDto alunoDto = new AlunoDto("lucas",
+                LocalDate.of(2002, 7,22),
+                "lucas22");*/
+        //System.out.println(matriculaController.createMatricula(alunoController.getAlunoById(13122),"DB"));
+        NotaDto notaDto = new NotaDto(98356, 13122, 9.8, LocalDate.now());
+        System.out.println(notaController.createNota(notaDto));
     }
 }
