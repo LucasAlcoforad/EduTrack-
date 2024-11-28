@@ -19,4 +19,7 @@ public class NotaController {
     public boolean updateNota(double valor, int id) throws SQLException {
         return new NotaService().updateNota(valor, id);
     }
+    public boolean deleteNota(int id) throws SQLException {
+        return new NotaService().deleteNota(id);
+    }
 }

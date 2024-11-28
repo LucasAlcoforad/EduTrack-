@@ -2,6 +2,7 @@ package service;
 
 import Entity.Aluno;
 import Entity.Disciplina;
+import Entity.Professor;
 import Exceçoes.UserNaoEncontradoException;
 import Repository.AlunoRepository;
 import Repository.DisciplinaRepository;
@@ -18,15 +19,15 @@ public class DisciplinaService {
         return disciplina;
     }
 
-    public int createDisciplina(String nome) throws SQLException {
+    public int createDisciplina(String nome, Professor professor) throws SQLException {
         Random random = new Random();
         int min = 10000;
         int max = 99999;
         int randomNumber = random.nextInt(max - min + 1) + min;
         if(DisciplinaRepository.getDisciplina(randomNumber)!=null){
-            return this.createDisciplina(nome);
+            return this.createDisciplina(nome, professor);
         }
-        return DisciplinaRepository.createDisciplina(new Disciplina(randomNumber,nome,null));
+        return DisciplinaRepository.createDisciplina(new Disciplina(randomNumber,nome, professor.getNome(), null),professor.getId());
     }
 
     public boolean deleteDisciplina(int id){

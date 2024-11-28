@@ -3,25 +3,27 @@ package Entity;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+
 
 public class Aluno extends User{
 
-    public List<String> disciplinas;
+    public Map<String, List<Double>> disciplinas;
 
 
     public Aluno() {
     }
 
-    public Aluno(int id, String password, String nome, LocalDate dataNascimento, Instant creationTimestamp, Instant updateTimestamp, List<String> disciplinas) {
+    public Aluno(int id, String password, String nome, LocalDate dataNascimento, Instant creationTimestamp, Instant updateTimestamp, Map<String, List<Double>> disciplinas) {
         super(id, password, nome, dataNascimento, creationTimestamp, updateTimestamp);
         this.disciplinas = disciplinas;
     }
 
-    public List<String> getDisciplinas() {
+    public Map<String, List<Double>> getDisciplinas() {
         return disciplinas;
     }
 
-    public void setDisciplinas(List<String> disciplinas) {
+    public void setDisciplinas(Map<String, List<Double>> disciplinas) {
         this.disciplinas = disciplinas;
     }
 

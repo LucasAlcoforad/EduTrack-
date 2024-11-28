@@ -1,14 +1,11 @@
 package Repository;
 
 import Config.DBConfig;
-import Controller.dto.AlunoDto;
 import Entity.Aluno;
-import Exceçoes.UserNaoEncontradoException;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.sql.Date;
+import java.util.*;
 
 public class AlunoRepository {
     public static int createAluno(Aluno aluno) throws SQLException {
@@ -30,19 +27,15 @@ public class AlunoRepository {
     public static Aluno getAluno(int id) {
         String sql = """
         SELECT 
-            aluno.id_aluno,
-            aluno.password,
-            aluno.nome AS aluno_nome,
-            aluno.data_nascimento,
-            aluno.create_timestamp,
-            aluno.update_timestamp,
-            disciplina.nome AS disciplina_nome
+            aluno.*,
+            disciplina.nome AS disciplina_nome,
+            nota.valor AS nota_valor
         FROM 
             aluno 
         LEFT JOIN 
-            matricula ON aluno.id_aluno = matricula.id_aluno
+            nota ON aluno.id_aluno = nota.id_aluno
         LEFT JOIN 
-            disciplina ON matricula.id_disciplina = disciplina.id_disciplina
+            disciplina ON nota.id_disciplina = disciplina.id_disciplina
         WHERE 
             aluno.id_aluno = ?;
         """;
@@ -55,16 +48,19 @@ public class AlunoRepository {
                         aluno = new Aluno(
                                 resultSet.getInt("id_aluno"),
                                 resultSet.getString("password"),
-                                resultSet.getString("aluno_nome"),
+                                resultSet.getString("nome"),
                                 resultSet.getDate("data_nascimento").toLocalDate(),
                                 resultSet.getTimestamp("create_timestamp").toInstant(),
                                 resultSet.getTimestamp("update_timestamp").toInstant(),
-                                new ArrayList<>()
+                                new HashMap<>()
                         );
                     }
                     String disciplina = resultSet.getString("disciplina_nome");
-                    if (disciplina != null) {
-                        aluno.getDisciplinas().add(disciplina);
+                    Double nota = resultSet.getDouble("nota_valor");
+                    if (disciplina != null && nota != null) {
+                        aluno.getDisciplinas()
+                                .computeIfAbsent(disciplina, k -> new ArrayList<>())
+                                .add(nota);
                     }
                 }
             }
@@ -72,6 +68,17 @@ public class AlunoRepository {
             throw new RuntimeException(e);
         }
         return aluno;
+    }
+
+    public static Aluno getAlunoByNome(String nome){
+        String sql = """
+                SELECT
+                    *
+                FROM
+                    aluno
+                WHERE
+                    aluno.nome = ?
+                """;
     }
 
     public static boolean updateAluno(Aluno aluno){

@@ -9,12 +9,15 @@ public class Disciplina {
 
     public String nome;
 
+    public String Professor;
+
     public List<String> alunos;
 
 
-    public Disciplina(Integer id, String nome, List<String> alunos) {
+    public Disciplina(Integer id, String nome, String professor, List<String> alunos) {
         this.id = id;
         this.nome = nome;
+        Professor = professor;
         this.alunos = alunos;
     }
 
@@ -46,11 +49,20 @@ public class Disciplina {
         this.alunos = alunos;
     }
 
+    public String getProfessor() {
+        return Professor;
+    }
+
+    public void setProfessor(String professor) {
+        Professor = professor;
+    }
+
     @Override
     public String toString() {
         return "Disciplina{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
+                ", Professor='" + Professor + '\'' +
                 ", alunos=" + alunos +
                 '}';
     }

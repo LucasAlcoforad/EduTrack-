@@ -66,4 +66,19 @@ public class NotaRepository {
             throw new RuntimeException(e);
         }
     }
+
+    public static boolean deleteNota(int id){
+        String sql = """
+                DELETE FROM
+                    nota
+                WHERE
+                    nota.id_nota = ?
+                """;
+        try (PreparedStatement statement = DBConfig.getConnection().prepareStatement(sql)){
+            statement.setInt(1, id);
+            return statement.executeUpdate() > 0;
+    } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

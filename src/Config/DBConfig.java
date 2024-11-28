@@ -26,9 +26,20 @@ public class DBConfig {
                         "    update_timestamp TIMESTAMP" +
                         ")";
                 connection.createStatement().execute(createAlunoTable);
+                String createProfessorTable = "CREATE TABLE IF NOT EXISTS professor(" +
+                        "    id_professor INT PRIMARY KEY," +
+                        "    password TEXT," +
+                        "    nome TEXT," +
+                        "    data_nascimento DATE," +
+                        "    create_timestamp TIMESTAMP," +
+                        "    update_timestamp TIMESTAMP" +
+                        ")";
+                connection.createStatement().execute(createProfessorTable);
                 String createDisciplinaTable = "CREATE TABLE IF NOT EXISTS disciplina(" +
                         "    id_disciplina INT PRIMARY KEY," +
-                        "    nome TEXT" +
+                        "    nome TEXT," +
+                        "    id_professor INT," +
+                        "    FOREIGN KEY (id_professor) REFERENCES professor(id_professor) ON DELETE CASCADE" +
                         ")";
                 connection.createStatement().execute(createDisciplinaTable);
                 String createNotaTable = """

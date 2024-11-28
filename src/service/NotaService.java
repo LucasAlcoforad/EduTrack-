@@ -38,4 +38,12 @@ public class NotaService {
         }
         return NotaRepository.updateNota(valor, id);
     }
+
+    public boolean deleteNota(int id) throws SQLException {
+        Nota nota = NotaRepository.getNota(id);
+        if (nota == null){
+            throw new UserNaoEncontradoException("Aluno com id " + id + " não encontrado.");
+        }
+        return NotaRepository.deleteNota(id);
+    }
 }
