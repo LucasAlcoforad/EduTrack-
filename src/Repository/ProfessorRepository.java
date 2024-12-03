@@ -25,7 +25,6 @@ public class ProfessorRepository {
             ps.setInt(1, id);
             try (ResultSet resultSet = ps.executeQuery()) {
                 while (resultSet.next()) {
-                    System.out.println("aqui");
                     if (professor == null) {
                         professor = new Professor(
                                 resultSet.getInt("id_professor"),
