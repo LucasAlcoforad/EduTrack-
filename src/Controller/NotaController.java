@@ -16,6 +16,10 @@ public class NotaController {
     public Nota getNota(int id) throws SQLException {
         return new NotaService().getNota(id);
     }
+
+    public Nota getNotaByData(LocalDate date, int idDisciplina, int idAluno) throws SQLException {
+        return new NotaService().getNotaByDate(date, idDisciplina, idAluno);
+    }
     public boolean updateNota(double valor, int id) throws SQLException {
         return new NotaService().updateNota(valor, id);
     }

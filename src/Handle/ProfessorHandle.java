@@ -1,11 +1,14 @@
 package Handle;
 
+import Controller.AlunoController;
 import Controller.DisciplinaController;
 import Controller.NotaController;
 import Controller.ProfessorController;
 import Controller.dto.NotaDto;
 import Controller.dto.UserDto;
+import Entity.Aluno;
 import Entity.Disciplina;
+import Entity.Nota;
 import Entity.Professor;
 
 import java.sql.SQLException;
@@ -19,6 +22,7 @@ public class ProfessorHandle {
     private static final ProfessorController professorController = new ProfessorController();
     private static final DisciplinaController disciplinaController = new DisciplinaController();
     private static final NotaController notaController = new NotaController();
+    private static final AlunoController alunoController = new AlunoController();
 
     public static void handleProfessorArea() throws SQLException {
         int option;
@@ -50,7 +54,8 @@ public class ProfessorHandle {
                     Digite 4 para lançar nota para um aluno,
                     Digite 5 para deletar sua conta,
                     Digite 6 para deletar uma disciplina,
-                    Digite 7 para corrigir uma nota ou
+                    Digite 7 para corrigir uma nota,
+                    Digite 8 para deletar uma nota ou
                     Digite 0 para sair.
                     %n""", professor.getNome());
             option = readInt();
@@ -141,8 +146,12 @@ public class ProfessorHandle {
         } else {
             LocalDate data = readDate("Qual dia foi a prova? OBS: Formatação (YEAR-MONTH-DAY)");
             System.out.println("Qual a nota?");
-            double nota = Double.parseDouble(scanner.nextLine().trim());
-            notaController.createNota(new NotaDto(disciplina,alunoId,nota,data));
+            double valor = Double.parseDouble(scanner.nextLine().trim());
+            Nota nota = notaController.createNota(new NotaDto(disciplina,alunoId,valor,data));
+            if (nota==null){
+                System.out.println("Duas provas nao podem ser dadas no mesmo dia");
+                lancarNota(professor);
+            }
             System.out.println("Nota lançada com sucesso!");
         }
     }
@@ -176,23 +185,28 @@ public class ProfessorHandle {
     }
 
     private static void updateNota(Professor professor) throws SQLException {
-
-        System.out.println("Digite o ID da disciplina:");
-        int disciplinaId = readInt();
-
-        System.out.println("Digite o ID da nota:");
-        int notaId = readInt();
-
-        Disciplina disciplina = disciplinaController.getDisciplina(disciplinaId);
-        if (disciplina == null || !Objects.equals(disciplina.getProfessor(), professor.getNome())) {
+        System.out.println("Digite o nome da disciplina que deseja deletar:");
+        String nomeDisciplina = scanner.nextLine().trim();
+        Disciplina disciplina = disciplinaController.getDisciplinaByName(nomeDisciplina);
+        if (disciplina == null || !professor.getDisciplinas().contains(nomeDisciplina)) {
             System.out.println("Disciplina não encontrada ou você não tem permissão para deletá-la.");
             return;
         }
-
+        LocalDate data = readDate("Qual foi a data de realizaçao da prova? OBS: Formatação (YEAR-MONTH-DAY)");
+        System.out.println("Qual a matricula do aluno");
+        Aluno aluno = alunoController.getAlunoById(readInt());
+        if (aluno == null){
+            System.out.println("Aluno nao encontrado");
+            updateNota(professor);
+        }
+        Nota nota = notaController.getNotaByData(data, disciplina.getId(), aluno.getId());
+        if (nota==null){
+            System.out.println("Nenhuma prova dessa disciplina foi realizada nesse dia");
+            updateProfessor(professor);
+        }
         System.out.println("Digite a nova nota:");
         double novaNota = Double.parseDouble(scanner.nextLine().trim());
-
-        if (notaController.updateNota(novaNota, notaId)) {
+        if (notaController.updateNota(novaNota, nota.getId())) {
             System.out.println("Nota atualizada com sucesso.");
         } else {
             System.out.println("Erro ao atualizar a nota. Tente novamente.");
@@ -200,24 +214,29 @@ public class ProfessorHandle {
     }
 
     private static void deleteNota(Professor professor) throws SQLException {
-
-
-        System.out.println("Digite o ID da disciplina:");
-        int disciplinaId = readInt();
-
-        System.out.println("Digite o ID da nota:");
-        int idNota = readInt();
-
-        Disciplina disciplina = disciplinaController.getDisciplina(disciplinaId);
-        if (disciplina == null || !Objects.equals(disciplina.getProfessor(), professor.getNome())) {
+        System.out.println("Digite o nome da disciplina que deseja deletar:");
+        String nomeDisciplina = scanner.nextLine().trim();
+        Disciplina disciplina = disciplinaController.getDisciplinaByName(nomeDisciplina);
+        if (disciplina == null || !professor.getDisciplinas().contains(nomeDisciplina)) {
             System.out.println("Disciplina não encontrada ou você não tem permissão para deletá-la.");
             return;
         }
-
-        if (notaController.deleteNota(idNota)) {
+        LocalDate data = readDate("Qual foi a data de realizaçao da prova? OBS: Formatação (YEAR-MONTH-DAY)");
+        System.out.println("Qual a matricula do aluno");
+        Aluno aluno = alunoController.getAlunoById(readInt());
+        if (aluno == null){
+            System.out.println("Aluno nao encontrado");
+            updateNota(professor);
+        }
+        Nota nota = notaController.getNotaByData(data, disciplina.getId(), aluno.getId());
+        if (nota==null){
+            System.out.println("Nenhuma prova dessa disciplina foi realizada nesse dia");
+            updateProfessor(professor);
+        }
+        if (notaController.deleteNota(nota.getId())) {
             System.out.println("Nota deletada com sucesso.");
         } else {
-            System.out.println("Erro ao deletar a nota. Tente novamente.");
+            System.out.println("Erro ao atualizar a nota. Tente novamente.");
         }
     }
 

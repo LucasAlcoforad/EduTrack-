@@ -4,6 +4,7 @@ import Config.DBConfig;
 import Entity.Nota;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 public class NotaRepository {
     public static Nota createNota(Nota nota) throws SQLException {
@@ -41,6 +42,40 @@ public class NotaRepository {
                             resultSet.getFloat("valor"),
                             resultSet.getDate("data").toLocalDate()
                             );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return nota;
+    }
+
+    public static Nota getNotaByData(LocalDate date, int idDisciplina, int idAluno) throws SQLException{
+        String sql = """
+                SELECT 
+                    * 
+                FROM 
+                    nota
+                WHERE
+                    data = ?
+                AND
+                    id_disciplina = ?
+                AND
+                    id_aluno = ?
+                """;
+        Nota nota = null;
+        try (PreparedStatement ps = DBConfig.getConnection().prepareStatement(sql)) {
+            ps.setDate(1, Date.valueOf(date));
+            ps.setInt(2, idDisciplina);
+            ps.setInt(3, idAluno);
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()){
+                    nota = new Nota(resultSet.getInt("id_nota"),
+                            resultSet.getInt("id_disciplina"),
+                            resultSet.getInt("id_aluno"),
+                            resultSet.getFloat("valor"),
+                            resultSet.getDate("data").toLocalDate()
+                    );
                 }
             }
         } catch (SQLException e) {
