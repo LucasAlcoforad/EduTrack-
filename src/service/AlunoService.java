@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class AlunoService {
 
-    public int createAluno(UserDto createAlunoDto) throws SQLException {
+    public Aluno createAluno(UserDto createAlunoDto) throws SQLException {
         if (createAlunoDto.dataDeNascimento()==null||
         createAlunoDto.nome()==null||
         createAlunoDto.password()==null){
@@ -40,6 +40,11 @@ public class AlunoService {
         if (aluno == null){
             throw new UserNaoEncontradoException("Aluno com id " + id + " não encontrado.");
         }
+        return aluno;
+    }
+
+    public Aluno getAlunoByNome(String nome){
+        Aluno aluno = AlunoRepository.getAlunoByNome(nome);
         return aluno;
     }
 

@@ -5,47 +5,45 @@ import Controller.ProfessorController;
 import Controller.dto.NotaDto;
 import Controller.dto.UserDto;
 import Entity.Aluno;
+import Entity.Professor;
+import Handle.AlunoHandle;
+import Handle.ProfessorHandle;
 
 import java.sql.SQLException;
 import java.sql.SQLOutput;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class Main {
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final ProfessorController professorController = new ProfessorController();
     public static void main(String[] args) throws SQLException {
-        Scanner scanner = new Scanner(System.in);
-        AlunoController alunoController = new AlunoController();
-        DisciplinaController disciplinaController = new DisciplinaController();
-        NotaController notaController = new NotaController();
-        ProfessorController professorController = new ProfessorController();
-        Integer opçao;
+        int option;
         do {
             System.out.println("""
-                    Digite 1 para se encaminhar para a area do aluno,
-                    Digite 2 para se encaminhar para a area do professor ou
+                    Digite 1 para se encaminhar para a área do aluno,
+                    Digite 2 para se encaminhar para a área do professor ou
                     Digite 0 para sair do sistema.
                     """);
-            opçao = scanner.nextInt();
-            if (opçao==1){
-                do {
-                    System.out.println("""
-                        Digite 1 para se cadastrar como aluno,
-                        Digite 2 para fazer login ou
-                        Digite 0 para voltar o menu.
-                        """);
-                    opçao = scanner.nextInt();
-                    if (opçao==1){
-                        do {
-                            System.out.println("Qual sera o seu nome de usuario?");
-                            String nome = scanner.nextLine();
-                        }
-
-
-                    }
-                    opçao = null;
-                }
-
+            option = readInt();
+            switch (option) {
+                case 1 -> AlunoHandle.handleAlunoArea();
+                case 2 -> ProfessorHandle.handleProfessorArea();
+                case 0 -> System.out.println("Saindo do sistema...");
+                default -> System.out.println("Opção inválida. Tente novamente.");
             }
-        }while (opçao!=0);
+        } while (option != 0);
+
+    }
+    private static int readInt() {
+        while (true) {
+            try {
+                return Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada inválida. Digite um número.");
+            }
+        }
     }
 }

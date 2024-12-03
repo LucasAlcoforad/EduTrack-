@@ -37,9 +37,6 @@ public class ProfessorService {
 
     public Professor getProfessorById(int id){
         Professor professor = ProfessorRepository.getProfessor(id);
-        if (professor == null){
-            throw new UserNaoEncontradoException("Aluno com id " + id + " não encontrado.");
-        }
         return professor;
     }
 

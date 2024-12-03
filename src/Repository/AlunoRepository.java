@@ -2,13 +2,14 @@ package Repository;
 
 import Config.DBConfig;
 import Entity.Aluno;
+import Entity.Nota;
 
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
 
 public class AlunoRepository {
-    public static int createAluno(Aluno aluno) throws SQLException {
+    public static Aluno createAluno(Aluno aluno) throws SQLException {
         String sql = "INSERT INTO aluno (id_aluno, password, nome, data_nascimento, create_timestamp, update_timestamp) VALUES (?,?,?,?,?,?)";
         try (PreparedStatement ps = DBConfig.getConnection().prepareStatement(sql)){
             ps.setInt(1,aluno.getId());
@@ -18,7 +19,7 @@ public class AlunoRepository {
             ps.setTimestamp(5, Timestamp.from(aluno.getCreationTimestamp()));
             ps.setTimestamp(6, Timestamp.from(aluno.getUpdateTimestamp()));
             ps.execute();
-            return aluno.getId();
+            return aluno;
         } catch (SQLException e){
             throw new RuntimeException(e);
         }
@@ -79,6 +80,26 @@ public class AlunoRepository {
                 WHERE
                     aluno.nome = ?
                 """;
+        Aluno aluno = null;
+        try (PreparedStatement ps = DBConfig.getConnection().prepareStatement(sql)) {
+            ps.setString(1, nome);
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()){
+                    aluno = new Aluno(
+                            resultSet.getInt("id_aluno"),
+                            resultSet.getString("password"),
+                            resultSet.getString("nome"),
+                            resultSet.getDate("data_nascimento").toLocalDate(),
+                            resultSet.getTimestamp("create_timestamp").toInstant(),
+                            resultSet.getTimestamp("update_timestamp").toInstant(),
+                            null
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return aluno;
     }
 
     public static boolean updateAluno(Aluno aluno){

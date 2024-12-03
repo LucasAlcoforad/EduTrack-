@@ -19,7 +19,21 @@ public class DisciplinaService {
         return disciplina;
     }
 
-    public int createDisciplina(String nome, Professor professor) throws SQLException {
+    public Disciplina getDisciplinaById(String nome) throws SQLException {
+        Disciplina disciplina = DisciplinaRepository.getDisciplinaByNome(nome);
+        return disciplina;
+    }
+
+    public boolean updateDisciplina(String nome, String disciplinaNome) throws SQLException {
+        Disciplina disciplina = DisciplinaRepository.getDisciplinaByNome(disciplinaNome);
+        if (disciplina == null){
+            throw new UserNaoEncontradoException("Aluno com id " + nome + " não encontrado.");
+        }
+        disciplina.setNome(nome);
+        return DisciplinaRepository.updateDisciplina(disciplina);
+    }
+
+    public Disciplina createDisciplina(String nome, Professor professor) throws SQLException {
         Random random = new Random();
         int min = 10000;
         int max = 99999;

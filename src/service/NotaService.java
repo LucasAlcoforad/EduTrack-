@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.util.Random;
 
 public class NotaService {
-
     public Nota createNota(NotaDto nota) throws SQLException {
         //professor.createNota
         Random random = new Random();
@@ -24,7 +23,11 @@ public class NotaService {
         if(NotaRepository.getNota(randomNumber)!=null){
             return this.createNota(nota);
         }
-        return NotaRepository.createNota(new Nota(randomNumber,nota.idDisciplina(), nota.idAluno(), nota.nota(), nota.data()));
+        Disciplina disciplina = DisciplinaRepository.getDisciplinaByNome(nota.disciplina());
+        if (disciplina == null){
+            throw new UserNaoEncontradoException("Disciplina nao encontrada");
+        }
+        return NotaRepository.createNota(new Nota(randomNumber,disciplina.getId(), nota.idAluno(), nota.nota(), nota.data()));
     }
 
     public Nota getNota(int id) throws SQLException {
